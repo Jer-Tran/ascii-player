@@ -18,30 +18,44 @@ function handleImage(file) {
     console.log(file)
     display.innerHTML = file.name + " " + file.size + " " + file.type + "<br>"
     // Currently puts image in container and place it in display div
-    const img = document.createElement("img"); // Probably not needed once I get converting to ascii, unless there's some way to present ascii in an image
-    img.classList.add("obj")
-    img.file = file
-
-    // Image to greyscale/aggregate rgb
-
-    // Aggregated rgb into ascii
-
-    // Get ascii array aggregate
+    const frame = document.createElement("canvas"); // Probably not needed once I get converting to ascii, unless there's some way to present ascii in an image
+    const context = frame.getContext("2d")
+    
+    // 
     const reader = new FileReader()
-    console.log(reader)
-    reader.onload = (e) => {
-        img.src = e.target.result;
-    }
-    console.log(reader)
-    reader.readAsDataURL(file)
-    console.log(reader)
+    reader.onload = e => {
+        
+        const image = new Image()
+        image.onload = () => {
+            
+            frame.width = image.width
+            frame.height= image.height
+            context.drawImage(image, 0, 0)
+            // Get image rgb value
+            const imgData = context.getImageData(0,0, frame.width, frame.height).data
+            // console.log(imgData)
+            const rgbData = []
 
-    // Present on the html
-    displayImg(img)
-    console.log(reader.result)
-    display.append(reader.result)
+            // Image to greyscale/aggregate rgb
+            for (let i = 0; i < imgData.length; i += 4) {
+                let r = imgData[i]
+                let g = imgData[i+1]
+                let b = imgData[i+2]
+                rgbData.push([r,g,b])
+            }
+            console.log(rgbData)
+
+            // Aggregated rgb into ascii
+
+            // Get ascii array aggregate
+
+            // Present on the html
+            displayImg(frame)
+        }
+        image.src = e.target.result;
+    }
+    reader.readAsDataURL(file)
 }
-// Goal right now is to restructure and generally have an idea for how code will progress, DO NOT COMMIT UNTIL this part is completed
 
 function handleVideo(file) {
     console.log("video")
