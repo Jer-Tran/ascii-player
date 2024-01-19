@@ -39,6 +39,8 @@ function handleImage(file) {
             // Aggregated rgb into ascii
 
             // Get ascii array aggregate
+            const ascii = lumiToAscii(rgbData)
+            console.log(ascii)
 
             // Present on the html
             displayImg(frame)
@@ -62,6 +64,18 @@ function aggregateData(imgData) {
     }
 
     return rgbData
+}
+
+function lumiToAscii(data) {
+    const gscale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    const res = []
+
+    for (let i = 0; i < data.length; i++) {
+        const index = Math.floor(data[i] * (gscale.length - 1) / 255)
+        const val = gscale[ index ]
+        res.push(val)
+    }
+    return res
 }
 
 // Math from https://marmelab.com/blog/2018/02/20/convert-image-to-ascii-art-masterpiece.html 
