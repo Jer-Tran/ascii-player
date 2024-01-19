@@ -31,18 +31,9 @@ function handleImage(file) {
             frame.width = image.width
             frame.height= image.height
             context.drawImage(image, 0, 0)
-            // Get image rgb value
+            
             const imgData = context.getImageData(0,0, frame.width, frame.height).data
-            // console.log(imgData)
-            const rgbData = []
-
-            // Image to greyscale/aggregate rgb
-            for (let i = 0; i < imgData.length; i += 4) {
-                let r = imgData[i]
-                let g = imgData[i+1]
-                let b = imgData[i+2]
-                rgbData.push([r,g,b])
-            }
+            const rgbData = aggregateData(imgData)
             console.log(rgbData)
 
             // Aggregated rgb into ascii
@@ -55,6 +46,27 @@ function handleImage(file) {
         image.src = e.target.result;
     }
     reader.readAsDataURL(file)
+}
+
+// Input is an array of 
+function aggregateData(imgData) {
+    const rgbData = []
+
+    // Image to greyscale/aggregate rgb
+    for (let i = 0; i < imgData.length; i += 4) {
+        let r = imgData[i]
+        let g = imgData[i+1]
+        let b = imgData[i+2]
+        // rgbData.push([r,g,b])
+        rgbData.push(getLumins(r,g,b))
+    }
+
+    return rgbData
+}
+
+// Math from https://marmelab.com/blog/2018/02/20/convert-image-to-ascii-art-masterpiece.html 
+function getLumins(r, g, b) {
+    return 0.21 * r + 0.72 * g + 0.07 * b
 }
 
 function handleVideo(file) {
