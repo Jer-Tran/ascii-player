@@ -43,7 +43,7 @@ function handleImage(file) {
             console.log(ascii)
 
             // Present on the html
-            displayImg(frame)
+            displayImg(ascii, frame.width)
         }
         image.src = e.target.result;
     }
@@ -70,7 +70,7 @@ function lumiToAscii(data) {
     const gscale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
     const res = []
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i+= 1) {
         const index = Math.floor(data[i] * (gscale.length - 1) / 255)
         const val = gscale[ index ]
         res.push(val)
@@ -93,8 +93,18 @@ function handleElse() {
     display.innerHTML = "An incompatible file has been uploaded, please try something else"
 }
 
-function displayImg(content) {
-    display.append(content)
+// Input of an array of greyscale characters
+function displayImg(content, width) {
+    let output = ""
+    for (let i = 0; i < content.length; i++) {
+        output += content[i]
+        if (i % width == 0) {
+            const para = document.createElement("p")
+            para.innerHTML = output
+            display.append(para)
+            output = ""
+        }
+    }
 }
 
 const fileIn = document.getElementById("file-in")
