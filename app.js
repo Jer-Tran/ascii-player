@@ -67,7 +67,8 @@ function aggregateData(imgData) {
 }
 
 function lumiToAscii(data) {
-    const gscale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    const gscale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~>>i!lI;:,\"^`'.."
+    // Having < and > as possible characters meant a string could possibly deliminate itself, essentially removing a few chars
     const res = []
 
     for (let i = 0; i < data.length; i+= 1) {
@@ -98,7 +99,7 @@ function displayImg(content, width) {
     let output = ""
     for (let i = 0; i < content.length; i++) {
         output += content[i]
-        if (i % width == 0) {
+        if ((i+1) % width == 0 && i != 0) {
             const para = document.createElement("p")
             para.innerHTML = output
             display.append(para)

@@ -3,4 +3,6 @@
 }
 #display * {
     margin: 0;
+    font-size: small;
+    white-space: nowrap;
 }
