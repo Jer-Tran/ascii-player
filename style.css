@@ -1,8 +1,17 @@
+body {
+    /* background-color: black; */
+}
 * {
     font-family: 'Courier New', Courier, monospace;
+    /* color: white; */
 }
 #display * {
     margin: 0;
-    font-size: small;
     white-space: nowrap;
+}
+#display {
+    font-size: 3px;
+    width: auto;
+    align-items: center;
+    text-align: center;
 }

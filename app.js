@@ -1,3 +1,5 @@
+const DEFAULT_WIDTH = 480
+
 
 function handleFile() {
     const file = fileIn.files[0]
@@ -15,11 +17,9 @@ function handleFile() {
 
 function handleImage(file) {
     // Get the contents
-    console.log(file)
-    display.innerHTML = file.name + " " + file.size + " " + file.type + "<br>"
-    // Currently puts image in container and place it in display div
     const frame = document.createElement("canvas"); // Probably not needed once I get converting to ascii, unless there's some way to present ascii in an image
     const context = frame.getContext("2d")
+    display.innerHTML = ""
     
     // 
     const reader = new FileReader()
@@ -28,13 +28,18 @@ function handleImage(file) {
         const image = new Image()
         image.onload = () => {
             
-            frame.width = image.width
-            frame.height= image.height
-            context.drawImage(image, 0, 0)
+            // If too large, will break the viewer
+            const width = Math.min(DEFAULT_WIDTH, image.width)
+            const height = Math.floor(width * image.height / image.width)
+            console.log(width, height)
+            
+            frame.width = width
+            frame.height= height
+            context.drawImage(image, 0, 0, width, height) // Extra params are for result height and width, which would also require adjustments to the frame size
             
             const imgData = context.getImageData(0,0, frame.width, frame.height).data
-            const rgbData = aggregateData(imgData)
-            console.log(rgbData)
+            const aggrData = aggregateData(imgData)
+            const rgbData = aggrData
 
             // Aggregated rgb into ascii
 
@@ -99,11 +104,16 @@ function displayImg(content, width) {
     let output = ""
     for (let i = 0; i < content.length; i++) {
         output += content[i]
+        
         if ((i+1) % width == 0 && i != 0) {
             const para = document.createElement("p")
             para.innerHTML = output
             display.append(para)
             output = ""
+        }
+        else {
+            // output += " " // monospace chars have 1:2 width:height ratio, so this is filler
+            output += content[i]
         }
     }
 }
