@@ -56,12 +56,21 @@ function handleImage(file) {
 }
 
 function getWidthMultiplier() {
-    const multiplier = 1
+    const val = document.getElementById("pixel-count").valueAsNumber
+    let multiplier = 1
+    if (!isNaN(val)) {
+        multiplier = val
+    }
     return multiplier
 }
 
 function adjustDisplaySize() {
-    display.style.fontSize = "3px"
+    const val = document.getElementById("char-size").value
+    let size = "3"
+    if (val != "") {
+        size = val
+    }
+    display.style.fontSize = size + "px"
 }
 
 // Input is an array of 
