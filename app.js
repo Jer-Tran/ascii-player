@@ -29,7 +29,7 @@ function handleImage(file) {
         image.onload = () => {
             
             // If too large, will break the viewer
-            const width = Math.min(DEFAULT_WIDTH, image.width)
+            const width = Math.min(DEFAULT_WIDTH, image.width) * getWidthMultiplier()
             const height = Math.floor(width * image.height / image.width)
             console.log(width, height)
             
@@ -53,6 +53,15 @@ function handleImage(file) {
         image.src = e.target.result;
     }
     reader.readAsDataURL(file)
+}
+
+function getWidthMultiplier() {
+    const multiplier = 1
+    return multiplier
+}
+
+function adjustDisplaySize() {
+    display.style.fontSize = "3px"
 }
 
 // Input is an array of 
@@ -116,6 +125,7 @@ function displayImg(content, width) {
             output += content[i]
         }
     }
+    adjustDisplaySize()
 }
 
 const fileIn = document.getElementById("file-in")
