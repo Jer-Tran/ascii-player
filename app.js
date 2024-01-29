@@ -108,26 +108,32 @@ function getLumins(r, g, b) {
 }
 
 function handleVideo(file) {
-    console.log("video")
     const blob = URL.createObjectURL(file)
-    console.log(URL.createObjectURL(file))
-    display.style.fontSize = "1em"
-    // display.innerHTML = "Videos upload detected - Work in progress"
+    var width = DEFAULT_WIDTH, height = DEFAULT_WIDTH * 9/16
+
     const frame = document.createElement("canvas");
     const context = frame.getContext("2d")
 
     const video = document.createElement("video")
+    // TODO: figure something out to simulate video playtime
     video.onloadedmetadata = function () {
         this.currentTime = Math.random() * 20
+        width = Math.min(DEFAULT_WIDTH, video.videoWidth) * getWidthMultiplier()
+        height = Math.floor(width * video.videoHeight / video.videoWidth)
     }
+    // Each time video frame is prompted, draw the frame
     video.onseeked = function (e) {
-        frame.height = video.videoHeight
-        frame.width = video.videoWidth
-        context.drawImage(video, 0, 0)
-        var img = new Image();
-        img.src = frame.toDataURL();
-        display.innerHTML = ""
-        display.append(img)
+        frame.width = width
+        frame.height= height
+        context.drawImage(video, 0, 0, width, height)
+
+        // From frame, get image pixels, aggregate to rgb, them convert to ascii list
+        const imgData = context.getImageData(0,0, frame.width, frame.height).data
+        const rgbData = aggregateData(imgData)
+        const ascii = lumiToAscii(rgbData)
+
+        // Present on the html
+        displayImg(ascii, frame.width)
     }
     video.src = blob
 }
@@ -140,6 +146,7 @@ function handleElse() {
 
 // Input of an array of greyscale characters
 function displayImg(content, width) {
+    display.innerHTML = ""
     let output = ""
     for (let i = 0; i < content.length; i++) {
         output += content[i]
