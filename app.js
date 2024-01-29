@@ -17,7 +17,7 @@ function handleFile() {
 
 function handleImage(file) {
     // Get the contents
-    const frame = document.createElement("canvas"); // Probably not needed once I get converting to ascii, unless there's some way to present ascii in an image
+    const frame = document.createElement("canvas");
     const context = frame.getContext("2d")
     display.innerHTML = ""
     
@@ -109,11 +109,32 @@ function getLumins(r, g, b) {
 
 function handleVideo(file) {
     console.log("video")
-    display.innerHTML = "Videos upload detected - Work in progress"
+    const blob = URL.createObjectURL(file)
+    console.log(URL.createObjectURL(file))
+    display.style.fontSize = "1em"
+    // display.innerHTML = "Videos upload detected - Work in progress"
+    const frame = document.createElement("canvas");
+    const context = frame.getContext("2d")
+
+    const video = document.createElement("video")
+    video.onloadedmetadata = function () {
+        this.currentTime = Math.random() * 20
+    }
+    video.onseeked = function (e) {
+        frame.height = video.videoHeight
+        frame.width = video.videoWidth
+        context.drawImage(video, 0, 0)
+        var img = new Image();
+        img.src = frame.toDataURL();
+        display.innerHTML = ""
+        display.append(img)
+    }
+    video.src = blob
 }
 
 function handleElse() {
     console.log("Other file")
+    display.style.fontSize = "1em"
     display.innerHTML = "An incompatible file has been uploaded, please try something else"
 }
 
@@ -141,4 +162,4 @@ const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
 fileIn.addEventListener("change", handleFile)
 document.getElementById("button-a").onclick = handleFile
-document.getElementById("button-b").onclick = displayImg
+document.getElementById("redraw").onclick = handleFile
