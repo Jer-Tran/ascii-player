@@ -115,16 +115,16 @@ function handleVideo(file) {
     const context = frame.getContext("2d")
 
     const video = document.createElement("video")
-    // TODO: figure something out to simulate video playtime
     video.onloadedmetadata = function () {
-        this.currentTime = Math.random() * 20
+        video.play()
         width = Math.min(DEFAULT_WIDTH, video.videoWidth) * getWidthMultiplier()
         height = Math.floor(width * video.videoHeight / video.videoWidth)
-    }
-    // Each time video frame is prompted, draw the frame
-    video.onseeked = function (e) {
         frame.width = width
         frame.height= height
+    }
+    
+    // Function to draw whatever the current frame the video is at
+    var _drawFrame = function (e) {
         context.drawImage(video, 0, 0, width, height)
 
         // From frame, get image pixels, aggregate to rgb, them convert to ascii list
@@ -135,7 +135,15 @@ function handleVideo(file) {
         // Present on the html
         displayImg(ascii, frame.width)
     }
+    // Each time video frame is prompted, draw the frame
+    video.onseeked = _drawFrame
     video.src = blob
+    // Draws frames in accordance to browser frame rate
+    function repeatFrame() {
+        _drawFrame()
+        requestAnimationFrame(repeatFrame)
+    }
+    repeatFrame()
 }
 
 function handleElse() {
