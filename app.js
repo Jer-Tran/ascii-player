@@ -115,6 +115,7 @@ function handleVideo(file) {
     const context = frame.getContext("2d")
 
     const video = document.createElement("video")
+    // On video being loaded
     video.onloadedmetadata = function () {
         video.play()
         width = Math.min(DEFAULT_WIDTH, video.videoWidth) * getWidthMultiplier()
@@ -122,7 +123,7 @@ function handleVideo(file) {
         frame.width = width
         frame.height= height
     }
-    
+
     // Function to draw whatever the current frame the video is at
     var _drawFrame = function (e) {
         context.drawImage(video, 0, 0, width, height)
