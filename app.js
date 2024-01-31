@@ -109,12 +109,12 @@ function getLumins(r, g, b) {
 
 function handleVideo(file) {
     const blob = URL.createObjectURL(file)
+    delete video.src
     var width = DEFAULT_WIDTH, height = DEFAULT_WIDTH * 9/16
 
     const frame = document.createElement("canvas");
     const context = frame.getContext("2d")
 
-    const video = document.createElement("video")
     // On video being loaded
     video.onloadedmetadata = function () {
         video.play()
@@ -176,6 +176,7 @@ function displayImg(content, width) {
 
 const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
+var video = document.createElement("video")
 fileIn.addEventListener("change", handleFile)
 document.getElementById("button-a").onclick = handleFile
 document.getElementById("redraw").onclick = handleFile
