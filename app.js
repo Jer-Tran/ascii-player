@@ -3,6 +3,10 @@ const DEFAULT_WIDTH = 480
 
 function handleFile() {
     const file = fileIn.files[0]
+    if (videoPlay) {
+        stopVideo()
+        return
+    }
 
     if (file.type.startsWith("image/")) {
         handleImage(file)
@@ -109,7 +113,6 @@ function getLumins(r, g, b) {
 
 function handleVideo(file) {
     const blob = URL.createObjectURL(file)
-    delete video.src
     var width = DEFAULT_WIDTH, height = DEFAULT_WIDTH * 9/16
 
     const frame = document.createElement("canvas");
@@ -142,8 +145,15 @@ function handleVideo(file) {
     // Draws frames in accordance to browser frame rate
     function repeatFrame() {
         _drawFrame()
-        requestAnimationFrame(repeatFrame)
+        if (video.currentTime == video.duration) {
+            videoPlay = false
+        }
+        if (videoPlay) {
+            requestAnimationFrame(repeatFrame)
+        }
+        
     }
+    videoPlay = true
     repeatFrame()
 }
 
@@ -155,7 +165,7 @@ function handleElse() {
 
 // Input of an array of greyscale characters
 function displayImg(content, width) {
-    display.innerHTML = ""
+    clearDisplay()
     let output = ""
     for (let i = 0; i < content.length; i++) {
         output += content[i]
@@ -174,9 +184,20 @@ function displayImg(content, width) {
     adjustDisplaySize()
 }
 
+function clearDisplay() {
+    display.innerHTML = ""
+}
+
+// Pauses current video
+function stopVideo() {
+    videoPlay = false
+    video.pause()
+}
+
 const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
 var video = document.createElement("video")
+var videoPlay = false
 fileIn.addEventListener("change", handleFile)
-document.getElementById("button-a").onclick = handleFile
+document.getElementById("button-a").onclick = stopVideo
 document.getElementById("redraw").onclick = handleFile
