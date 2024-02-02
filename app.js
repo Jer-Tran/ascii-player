@@ -4,14 +4,15 @@ const DEFAULT_WIDTH = 480
 function handleFile() {
     const file = fileIn.files[0]
     if (videoPlay) {
-        stopVideo()
         return
     }
 
     if (file.type.startsWith("image/")) {
+        videoMode = false
         handleImage(file)
     }
     else if (file.type.startsWith("video/")) {
+        videoMode = true
         handleVideo(file)
     }
     else {
@@ -128,7 +129,7 @@ function handleVideo(file) {
     }
 
     // Function to draw whatever the current frame the video is at
-    var _drawFrame = function (e) {
+    drawFunction = function (e) {
         context.drawImage(video, 0, 0, width, height)
 
         // From frame, get image pixels, aggregate to rgb, them convert to ascii list
@@ -139,22 +140,19 @@ function handleVideo(file) {
         // Present on the html
         displayImg(ascii, frame.width)
     }
-    // Each time video frame is prompted, draw the frame
-    video.onseeked = _drawFrame
     video.src = blob
-    // Draws frames in accordance to browser frame rate
-    function repeatFrame() {
-        _drawFrame()
-        if (video.currentTime == video.duration) {
-            videoPlay = false
-        }
-        if (videoPlay) {
-            requestAnimationFrame(repeatFrame)
-        }
-        
+    togglePlayback()
+}
+
+// Draws frames in accordance to browser frame rate
+function repeatFrame() {
+    drawFunction()
+    if (video.currentTime == video.duration) {
+        videoPlay = false
     }
-    videoPlay = true
-    repeatFrame()
+    if (videoPlay) {
+        requestAnimationFrame(repeatFrame)
+    }
 }
 
 function handleElse() {
@@ -189,9 +187,19 @@ function clearDisplay() {
 }
 
 // Pauses current video
-function stopVideo() {
-    videoPlay = false
-    video.pause()
+function togglePlayback() {
+    if (videoMode) {
+        if (videoPlay) {
+            videoPlay = false
+            video.pause()
+        }
+        else {
+            video.play()
+            videoPlay = true
+            repeatFrame()
+        }
+    }
+    
 }
 
 function setVolume() {
@@ -203,7 +211,10 @@ const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
 var video = document.createElement("video")
 var videoPlay = false
+var drawFunction
+var videoMode = false
 fileIn.addEventListener("change", handleFile)
 document.getElementById("button-a").onclick = setVolume
+document.getElementById("pause").onclick = togglePlayback
 document.getElementById("redraw").onclick = handleFile
 document.getElementById("volume").onchange = setVolume
