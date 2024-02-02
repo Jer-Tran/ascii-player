@@ -194,10 +194,16 @@ function stopVideo() {
     video.pause()
 }
 
+function setVolume() {
+    const val = document.getElementById("volume").value
+    video.volume = val / 100
+}
+
 const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
 var video = document.createElement("video")
 var videoPlay = false
 fileIn.addEventListener("change", handleFile)
-document.getElementById("button-a").onclick = stopVideo
+document.getElementById("button-a").onclick = setVolume
 document.getElementById("redraw").onclick = handleFile
+document.getElementById("volume").onchange = setVolume
