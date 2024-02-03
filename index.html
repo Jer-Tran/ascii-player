@@ -10,21 +10,21 @@
 
     <body>
         <div id="text">
-            <button id="button-a">Debug A</button>
-            Width (1x) : <input type="number" id="pixel-count" value="1">
-            Size (px): <input type="number" id="char-size" value="3">
-            <button id="pause">Pause</button>
-            <button id="redraw">Redraw</button>
-            Muted: <input type="range" id="volume"></button>
+            <div>
+                <input type="file" id="file-in" accept="image/*,video/*">
+            </div>
+            <div>
+                Width (1x) : <input type="number" id="pixel-count" value="1">
+                Size (px): <input type="number" id="char-size" value="3">
+                Volume: <input type="range" id="volume"></button>
+            </div>
+            <div>
+                <button id="pause">Pause</button>
+                <button id="redraw">Redraw</button>
+            </div>
         </div>
 
-        <div id="display">
-            
-        </div>
-        
-        <div>
-            <input type="file" id="file-in" accept="image/*,video/*">
-        </div>
+        <div id="display"></div>
 
         <script src="app.js" type="module"></script>
     </body>

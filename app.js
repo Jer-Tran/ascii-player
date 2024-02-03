@@ -214,7 +214,6 @@ var videoPlay = false
 var drawFunction
 var videoMode = false
 fileIn.addEventListener("change", handleFile)
-document.getElementById("button-a").onclick = setVolume
 document.getElementById("pause").onclick = togglePlayback
 document.getElementById("redraw").onclick = handleFile
 document.getElementById("volume").onchange = setVolume
