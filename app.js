@@ -8,11 +8,11 @@ function handleFile() {
     }
 
     if (file.type.startsWith("image/")) {
-        videoMode = false
+        setVideoMode(false)
         handleImage(file)
     }
     else if (file.type.startsWith("video/")) {
-        videoMode = true
+        setVideoMode(true)
         handleVideo(file)
     }
     else {
@@ -148,7 +148,7 @@ function handleVideo(file) {
 function repeatFrame() {
     drawFunction()
     if (video.currentTime == video.duration) {
-        videoPlay = false
+        setVideoPlay(false)
     }
     if (videoPlay) {
         requestAnimationFrame(repeatFrame)
@@ -190,12 +190,12 @@ function clearDisplay() {
 function togglePlayback() {
     if (videoMode) {
         if (videoPlay) {
-            videoPlay = false
+            setVideoPlay(false)
             video.pause()
         }
         else {
             video.play()
-            videoPlay = true
+            setVideoPlay(true)
             repeatFrame()
         }
     }
@@ -207,13 +207,23 @@ function setVolume() {
     video.volume = val / 100
 }
 
+function setVideoPlay(val) {
+    videoPlay = val
+}
+
+function setVideoMode(val) {
+    videoMode = val
+}
+
 const fileIn = document.getElementById("file-in")
 const display = document.getElementById("display")
 var video = document.createElement("video")
-var videoPlay = false
 var drawFunction
-var videoMode = false
+var videoPlay
+var videoMode
 fileIn.addEventListener("change", handleFile)
 document.getElementById("pause").onclick = togglePlayback
 document.getElementById("redraw").onclick = handleFile
 document.getElementById("volume").onchange = setVolume
+setVideoPlay(false)
+setVideoMode(false)
